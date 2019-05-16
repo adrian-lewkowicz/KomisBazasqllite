@@ -26,12 +26,12 @@
             <TextBox x:Name="rok"/>
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="10" Padding="5">
-            <Button x:Name="add" Content="Dodaj"/>
-            <Button x:Name="edit" Content="Edytuj"/>
-            <Button x:Name="remove" Content="Usuń"/>
+            <Button x:Name="add" Content="Dodaj" Click="Add_Click"/>
+            <Button x:Name="edit" Content="Edytuj" Click="Edit_Click"/>
+            <Button x:Name="remove" Content="Usuń" Click="Remove_Click"/>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" Spacing="10" Padding="5">
-            <ListView Background="Azure" Width="200" Height="200">
+            <ListView Background="Azure" Width="200" Height="200" x:Name="ListView">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
