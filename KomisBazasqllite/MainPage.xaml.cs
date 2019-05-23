@@ -18,8 +18,9 @@ namespace KomisBazasqllite
     /// </summary>
     public sealed partial class MainPage : Page
     {
-
-        List<Cars> cars = new List<Cars>();
+        
+        List<Cars> carsList = new List<Cars>();
+        Cars selected;
         public MainPage()
         {
             this.InitializeComponent();
@@ -47,20 +48,42 @@ namespace KomisBazasqllite
 
         private void Edit_Click(object sender, RoutedEventArgs e)
         {
-
+            selected.Marka = marka.Text;
+            selected.Model = model.Text;
+            selected.Rok = Convert.ToInt32(rok.Text);
+            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
+            var conn = new SQLiteAsyncConnection(path, true);
+            conn.UpdateAsync(selected);
+            reload();
         }
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-
+            selected = (Cars)ListView.SelectedItem;
+            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
+            var conn = new SQLiteAsyncConnection(path, true);
+            conn.DeleteAsync(selected);
+            reload();
         }
         async void reload()
         {
             var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
             var conn = new SQLiteAsyncConnection(path, true);
             var query = conn.Table<Cars>();
-            cars = await query.ToListAsync();
-            ListView.ItemsSource = cars;
+            carsList = await query.ToListAsync();
+            ListView.ItemsSource = carsList;
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListView.SelectedItem != null)
+            {
+                selected = (Cars)ListView.SelectedItem;
+                marka.Text = selected.Marka;
+                model.Text = selected.Model;
+                rok.Text = selected.Rok.ToString();
+            }
+
         }
     }
 
