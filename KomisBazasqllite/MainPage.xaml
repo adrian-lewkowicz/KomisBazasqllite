@@ -18,7 +18,13 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" Margin="10" Spacing="10">
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" Margin="10" Spacing="10" >
+            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" >
+                <TextBlock Text="Wyszukaj" HorizontalAlignment="Left"/>
+                <TextBox x:Name="search" MinWidth="150" Text="Mazda"/>
+                <Button x:Name="searchButton" Content="Wyszukaj" Click="SearchButton_Click"/>
+                <Button x:Name="CancelSearch" Content="Anuluj" Click="CancelSearch_Click"/>
+            </StackPanel>
             <TextBlock Text="Marka"/>
             <TextBox x:Name="marka"/>
             <TextBlock Text="Model"/>
@@ -31,8 +37,8 @@
             <Button x:Name="edit" Content="Edytuj" Click="Edit_Click"/>
             <Button x:Name="remove" Content="Usuń" Click="Remove_Click"/>
         </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" Spacing="10" Padding="5">
-            <ListView Background="Azure" Width="200"  Height="200" x:Name="ListView" SelectionChanged="ListView_SelectionChanged">
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" Spacing="10" Padding="5" x:DefaultBindMode="TwoWay" >
+            <ListView Background="Azure" Width="200"  Height="200" x:Name="ListView" SelectionChanged="ListView_SelectionChanged" ItemsSource="x:Bind Cars" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" >

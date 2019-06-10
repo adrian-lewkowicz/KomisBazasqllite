@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -19,8 +20,8 @@ namespace KomisBazasqllite
     public sealed partial class MainPage : Page
     {
         
-        List<Cars> carsList = new List<Cars>();
-        Cars selected;
+        List<Car> carsList = new List<Car>();
+        Car selected;
         public MainPage()
         {
             this.InitializeComponent();
@@ -30,14 +31,14 @@ namespace KomisBazasqllite
             base.OnNavigatedTo(e);
             var path = Path.Combine(ApplicationData.Current.LocalFolder.Path,"cars.db");
             var conn = new SQLiteAsyncConnection(path, true);
-            conn.CreateTableAsync<Cars>();
+            conn.CreateTableAsync<Car>();
             reload();
         }
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
             var conn = new SQLiteAsyncConnection(path, true);
-            var car = new Cars {
+            var car = new Car {
                 Marka = marka.Text,
                 Model = model.Text,
                 Rok=Convert.ToInt32(rok.Text)
@@ -59,7 +60,7 @@ namespace KomisBazasqllite
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            selected = (Cars)ListView.SelectedItem;
+            selected = (Car)ListView.SelectedItem;
             var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
             var conn = new SQLiteAsyncConnection(path, true);
             conn.DeleteAsync(selected);
@@ -69,7 +70,7 @@ namespace KomisBazasqllite
         {
             var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
             var conn = new SQLiteAsyncConnection(path, true);
-            var query = conn.Table<Cars>();
+            var query = conn.Table<Car>();
             carsList = await query.ToListAsync();
             ListView.ItemsSource = carsList;
         }
@@ -78,12 +79,28 @@ namespace KomisBazasqllite
         {
             if (ListView.SelectedItem != null)
             {
-                selected = (Cars)ListView.SelectedItem;
+                selected = (Car)ListView.SelectedItem;
                 marka.Text = selected.Marka;
                 model.Text = selected.Model;
                 rok.Text = selected.Rok.ToString();
             }
 
+        }
+
+        private async void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string searchValue = search.Text;
+            var path = Path.Combine(ApplicationData.Current.LocalFolder.Path, "cars.db");
+            var conn = new SQLiteAsyncConnection(path, true);
+            var car = await conn.Table<Car>().Where(x => x.Marka == searchValue).ToListAsync(); //dopisac filtrowanie xD
+                                                                                                 // int Id = car.Id;
+                                                                                                 //var carInList = carsList.Select(n=>n).Where(n => n.Id == Id).ToList<Car>();
+            ListView.ItemsSource = car;
+        }
+
+        private void CancelSearch_Click(object sender, RoutedEventArgs e)
+        {
+            ListView.ItemsSource = carsList;
         }
     }
 

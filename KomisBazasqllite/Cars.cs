@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace KomisBazasqllite
 {
-    class Cars
+    class Car
     {
 
-        public Cars()
+        public Car()
         {
         }
         [PrimaryKey, AutoIncrement]
